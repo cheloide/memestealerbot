@@ -32,10 +32,10 @@ class StealerRunnable implements Runnable {
 
     public void run() {
         Update update = updateService.poll();
-        // if (update != null && update.getChannelPost() != null && update.getChannelPost().getChat() != null && update.getChannelPost().getChat().getId() == dumpChannelId) {
-        // Message msg = update.getChannelPost();
-        if (update != null && update.getMessage() != null && update.getMessage().getChat() != null && update.getMessage().getChat().getId() == dumpChannelId) {
-            Message msg = update.getMessage();
+        if (update != null && update.getChannelPost() != null && update.getChannelPost().getChat() != null && update.getChannelPost().getChat().getId() == dumpChannelId) {
+            Message msg = update.getChannelPost();
+            // if (update != null && update.getMessage() != null && update.getMessage().getChat() != null && update.getMessage().getChat().getId() == dumpChannelId) {
+            // Message msg = update.getMessage();
             if (msg.getPhoto() != null && !msg.getPhoto().isEmpty()) {
                 processPhoto(msg);
             } else if (msg.getVideo() != null) {
@@ -50,15 +50,11 @@ class StealerRunnable implements Runnable {
         String          photoId      = photo.get(0).getFileId();
 
         if (mediaGroupId == null) {
-            System.out.println("mediaGroupId == null");
             SendPhotoRequest request = new SendPhotoRequest();
             request.setChatId(postChannelId);
             request.setPhoto(photoId);
             botApi.sendPhoto(request);
-
         } else {
-            System.out.println("mediaGroupId != null");
-            System.out.println("test");
             dmgs.addPhoto(postChannelId, msg.getMediaGroupId(), photoId, DEFERRED_TIMEOUT_MS);
         }
     }
